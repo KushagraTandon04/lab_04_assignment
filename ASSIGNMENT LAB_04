@@ -1,0 +1,81 @@
+flight_data = [
+    {"Flight ID": "AI161E90", "From": "BLR", "To": "BOM", "Price": 5600},
+    {"Flight ID": "BR161F91", "From": "BOM", "To": "BBI", "Price": 6750},
+    {"Flight ID": "AI161F99", "From": "BBI", "To": "BLR", "Price": 8210},
+    {"Flight ID": "VS171E20", "From": "JLR", "To": "BBI", "Price": 5500},
+    {"Flight ID": "AS171G30", "From": "HYD", "To": "JLR", "Price": 4400},
+    {"Flight ID": "AI131F49", "From": "HYD", "To": "BOM", "Price": 3499}
+]
+
+city_codes = {
+    "BLR": "Bengaluru",
+    "BOM": "Mumbai",
+    "BBI": "Bhubaneswar",
+    "HYD": "Hyderabad",
+    "JLR": "Jabalpur"
+}
+
+def search_by_city(city, parameter):
+    results = []
+    for flight in flight_data:
+        if parameter == "From":
+            if flight["From"] == city:
+                results.append(flight)
+        elif parameter == "To":
+            if flight["To"] == city:
+                results.append(flight)
+        elif parameter == "City":
+            if flight["From"] == city or flight["To"] == city:
+                results.append(flight)
+    return results
+
+def print_flight(flight):
+    print(f"Flight ID: {flight['Flight ID']}")
+    print(f"From: {city_codes[flight['From']]}")
+    print(f"To: {city_codes[flight['To']]}")
+    print(f"Price: {flight['Price']}")
+
+while True:
+    print("Search Options:")
+    print("1. Flights for a particular City")
+    print("2. Flights From a city")
+    print("3. Flights between two given cities")
+    print("4. Exit")
+    choice = input("Enter your choice: ")
+
+    if choice == "1":
+        city = input("Enter the city code (e.g., BLR, BOM, BBI, HYD, JLR): ")
+        flights = search_by_city(city, "City")
+        if not flights:
+            print("No flights found for the selected city.")
+        else:
+            for flight in flights:
+                print_flight(flight)
+
+    elif choice == "2":
+        city = input("Enter the city code (e.g., BLR, BOM, BBI, HYD, JLR): ")
+        flights = search_by_city(city, "From")
+        if not flights:
+            print("No flights found from the selected city.")
+        else:
+            for flight in flights:
+                print_flight(flight)
+
+    elif choice == "3":
+        from_city = input("Enter the source city code: ")
+        to_city = input("Enter the destination city code: ")
+        flights = search_by_city(from_city, "From")
+        connecting_flights = search_by_city(to_city, "To")
+        results = [flight for flight in flights if flight in connecting_flights]
+        if not results:
+            print("No connecting flights found between the selected cities.")
+        else:
+            for flight in results:
+                print_flight(flight)
+
+    elif choice == "4":
+        print("Exiting the program.")
+        break
+
+    else:
+        print("Invalid choice. Please select a valid option.")
